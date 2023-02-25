@@ -119,7 +119,26 @@
 		.st101{fill:none;stroke:#646464;stroke-width:1.1451;stroke-linecap:round;stroke-miterlimit:10;}
 		.st102{display:none;fill:none;stroke:#FFFFFF;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
 	</style>
+	<script>
+	const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
+	if (isSafari) {
+	  // get the element you want to scale
+	  // add an event listener to the window object to detect when the page is resized
+	  window.addEventListener('resize', function() {
+		// get the width and height of the element
+		let element = document.getElementById('myElement');
+		let elementWidth = element.offsetWidth;
+		let elementHeight = element.offsetHeight;
+
+		// calculate the scaling factor
+		let scaleFactor = Math.min(window.innerWidth / elementWidth, window.innerHeight / elementHeight);
+
+		// set the transform scale
+		element.style.transform = `scale(${scaleFactor})`;
+	  });
+	}
+	</script>
   </head>
   <body>
     <div class="layers">
@@ -13140,13 +13159,13 @@
 </g>
 <g transform="translate(40,5709.3)rotate(0)">
 <foreignObject width="920" height="551.32">
-	<!--
-	  In the context of SVG embeded into HTML, the XHTML namespace could
-	  be avoided, but it is mandatory in the context of an SVG document
-	-->
-	<div style="position:fixed">
-		<iframe width="920" height="525" src="https://uatfast.valuestoryapp.com/Expedient" title="Cloud Transformation Explorer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-	</div>
+<!--
+  In the context of SVG embeded into HTML, the XHTML namespace could
+  be avoided, but it is mandatory in the context of an SVG document
+-->
+<div id="cloud_xfrom_wrap" style="position:fixed">
+	<iframe width="920" height="525" src="https://uatfast.valuestoryapp.com/Expedient" title="Cloud Transformation Explorer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
 	</foreignObject>
 </g>
 <g data-micromodal-trigger="modal-1" style="cursor: pointer;">
