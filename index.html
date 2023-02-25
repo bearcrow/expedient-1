@@ -123,11 +123,12 @@
 	const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
 	if (isSafari) {
+		console.log("Safari detected. Adding fix for foreignObject sizing...");
 	  // get the element you want to scale
 	  // add an event listener to the window object to detect when the page is resized
 	  window.addEventListener('resize', function() {
 		// get the width and height of the element
-		let element = document.getElementById('myElement');
+		let element = document.getElementById('cloud_xform_wrap');
 		let elementWidth = element.offsetWidth;
 		let elementHeight = element.offsetHeight;
 
