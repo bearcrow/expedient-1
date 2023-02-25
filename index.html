@@ -15,6 +15,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
 	<style type="text/css">
+		html{height:100%;}
+		body{height:100%;}
 		.st0{fill:#F0F0F0;}
 		.st1{fill:#D2D2D2;stroke:#FFFFFF;stroke-linecap:round;stroke-miterlimit:10;}
 		.st2{fill:#F20505;}
@@ -119,33 +121,51 @@
 		.st101{fill:none;stroke:#646464;stroke-width:1.1451;stroke-linecap:round;stroke-miterlimit:10;}
 		.st102{display:none;fill:none;stroke:#FFFFFF;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
 	</style>
-	<script>
+		<script>
 	const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-
-	if (isSafari) {
-		console.log("Safari detected. Adding fix for foreignObject sizing...");
-	  // get the element you want to scale
-	  // add an event listener to the window object to detect when the page is resized
-	  window.addEventListener('resize', function() {
-		console.log("Setting position & height of container...");
+	coordConvert = {};
+	function makeAbsoluteContext(element, svgDocument) {
+	  return function(x,y) {
+		var offset = svgDocument.getBoundingClientRect();
+		var matrix = element.getScreenCTM();
+		return {
+		  x: (matrix.a * x) + (matrix.c * y) + matrix.e - offset.left,
+		  y: (matrix.b * x) + (matrix.d * y) + matrix.f - offset.top,
+		  transform:matrix
+		};
+	  };
+	}
+	function bodyLoad(){
+		console.log("body load...");
+		coordConvert = makeAbsoluteContext(document.getElementById("cloud_xform_container"),document.getElementById("SVG-foreground"));
+		if (isSafari) {
+		  console.log("Safari detected. Adding fix for foreignObject bug...");
+		  document.getElementById("cloud_xform_safari_fallback").style.display="block";
+		  window.addEventListener('resize', onResize);
+		}else{
+			document.getElementById("cloud_xform_wrap").style.visibility="visible";
+		}
+	}
+	function onResize(){
+		//console.log("Setting position & height of container...");
 		// get the width and height of the element
-		let element = document.getElementById('cloud_xform_wrap');
+		let element = document.getElementById('cloud_xform_wrap_safari');
 		let elementWidth = element.offsetWidth;
 		let elementHeight = element.offsetHeight;
-		var container = document.getElementById('cloud_xform_container');
-		var bBox = container.getBBox();
-		console.log("bBox:" + bBox.x + ", " + bBox.y + ", " + bBox.width + " x " +bBox.height);
+		var sizer = document.getElementById('cte-cal');
+		var bBox = sizer.getBBox();
 		// calculate the scaling factor
-		element.style.position = "absolute";
-		element.style.left = bBox.x;
-		element.style.top = bBox.y;
-		element.style.width = bBox.width;
-		element.style.height = bBox.height;
-	  });
+		element.style.position = "relative";
+		coords = coordConvert(0,0);
+		element.style.left = coords.x+"px";
+		element.style.top = coords.y+"px";
+		element.style.width = (bBox.width*coords.transform.a)+"px";
+		element.style.height = (bBox.height*coords.transform.d)+"px";
+		//console.log("setting div to:" + coords.x + ", " + coords.y + ", " + bBox.width + " x " +bBox.height);
 	}
 	</script>
   </head>
-  <body>
+  <body onload="bodyLoad()">
     <div class="layers">
       <div id="frame" class="frame z-0">
         <img src="frame-1000x6665.png" alt="Empty frame image">
@@ -153,9 +173,10 @@
       <div id="animation-0" class="layer z-5"></div>
       <div id="animation-1" class="layer z-5"></div>
       <div id="animation-2" class="layer z-5"></div>
+      <div id="animation-2" class="layer z-5"></div>
       <div id="animation-3" class="layer z-5"></div>
       <div class="layer z-2">
-	  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	  <svg id="SVG-background" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 1000 6665" style="enable-background:new 0 0 1000 6665;" xml:space="preserve">
         <g id="BG">
 	<g>
@@ -5720,10 +5741,10 @@
 		</g>
 	</g>
 </g>
-</svg>
+      </svg>
       </div>
       <div class="layer z-7">
-        <svg version="1.1" id="BG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+        <svg version="1.1" id="SVG-foreground" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 1000 6665" style="enable-background:new 0 0 1000 6665;" xml:space="preserve">
 	 <g id="Text">
 	<g>
@@ -13162,22 +13183,28 @@
 	</g>
 	<rect class="st50" width="1000" height="6665"/>
 </g>
-<g id="cloud_xform_container" transform="translate(40,5709.3)rotate(0)">
+<g id="cloud_xform_container" transform="translate(40,5709.3)rotate(0)" style="visibility:hidden;">
 <foreignObject width="920" height="551.32">
 <!--
   In the context of SVG embeded into HTML, the XHTML namespace could
   be avoided, but it is mandatory in the context of an SVG document
 -->
-<div id="cloud_xform_wrap" position="fixed"  width="100%" height="100%">
+<div id="cloud_xform_wrap" style="visibility:hidden;width:100%;height:100%">
 	<iframe width="100%" height="100%" src="https://uatfast.valuestoryapp.com/Expedient" title="Cloud Transformation Explorer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </div>
-	</foreignObject>
+</foreignObject>
 </g>
 <g data-micromodal-trigger="modal-1" style="cursor: pointer;">
 <g><rect x="400" y="6439.91" style="opacity:0.0" width="200" height="50"></rect></g>
 </g>
-	     </svg>
+	    </svg>
       </div>
+	  <div id="cloud_xform_safari_fallback" class="layer z-8" style="height:100%; display:none;">
+        <div id="cloud_xform_wrap_safari" style="background-color:red">
+		  <iframe width="100%" height="100%" src="https://uatfast.valuestoryapp.com/Expedient" title="Cloud Transformation Explorer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+      </div>
+      
     </div>
 
 <div class="modal micromodal-slide" id="modal-1" aria-hidden="true">
