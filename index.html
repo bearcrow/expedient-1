@@ -135,17 +135,6 @@
 		};
 	  };
 	}
-	function bodyLoad(){
-		console.log("body load...");
-		coordConvert = makeAbsoluteContext(document.getElementById("cloud_xform_container"),document.getElementById("SVG-foreground"));
-		if (isSafari) {
-		  console.log("Safari detected. Adding fix for foreignObject bug...");
-		  document.getElementById("cloud_xform_safari_fallback").style.display="block";
-		  window.addEventListener('resize', onResize);
-		}else{
-			document.getElementById("cloud_xform_wrap").style.visibility="visible";
-		}
-	}
 	function onResize(){
 		//console.log("Setting position & height of container...");
 		// get the width and height of the element
@@ -162,6 +151,18 @@
 		element.style.width = (bBox.width*coords.transform.a)+"px";
 		element.style.height = (bBox.height*coords.transform.d)+"px";
 		//console.log("setting div to:" + coords.x + ", " + coords.y + ", " + bBox.width + " x " +bBox.height);
+	}
+	function bodyLoad(){
+		console.log("body load...");
+		coordConvert = makeAbsoluteContext(document.getElementById("cloud_xform_container"),document.getElementById("SVG-foreground"));
+		if (isSafari) {
+		  console.log("Safari detected. Adding fix for foreignObject bug...");
+		  document.getElementById("cloud_xform_safari_fallback").style.display="block";
+		  window.addEventListener('resize', onResize);
+		  onResize();
+		}else{
+			document.getElementById("cloud_xform_wrap").style.visibility="visible";
+		}
 	}
 	</script>
   </head>
@@ -13200,7 +13201,7 @@
 	    </svg>
       </div>
 	  <div id="cloud_xform_safari_fallback" class="layer z-8" style="height:100%; display:none;">
-        <div id="cloud_xform_wrap_safari" style="background-color:red">
+        <div id="cloud_xform_wrap_safari">
 		  <iframe width="100%" height="100%" src="https://uatfast.valuestoryapp.com/Expedient" title="Cloud Transformation Explorer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
       </div>
