@@ -134,6 +134,7 @@
 		let elementHeight = element.offsetHeight;
 		var container = document.getElementById('cloud_xform_container');
 		var bBox = container.getBBox();
+		console.log("bBox:" + bBox.x + ", " + bBox.y + ", " + bBox.width + " x " +bBox.height);
 		// calculate the scaling factor
 		element.style.position = "absolute";
 		element.style.left = bBox.x;
